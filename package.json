@@ -7,7 +7,7 @@
       "type": "git",
     "url": "https://mrdizzy@github.com/mrdizzy/json-to-xml.git"
   },
-  "main": "index.js",
+  "main": "app.js",
   "devDependencies": { "vows": "0.6.x" },
 
   "engines": {

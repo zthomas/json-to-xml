@@ -1,91 +1,10 @@
-// Example
-// -------
-// 
-// Takes a JavaScript object and recursively converts it into XML.
-//
-// **Input:**
-//
-//     {
-//         customers: {
-//             customer: [{
-//                 "-name": "David Pettifer",
-//                 "-age": 32,
-//                 addresses: {
-//                     address: [{
-//                         house_number: 22,
-//                         street: "Brook Road",
-//                         postcode: "PO37 7LU"
-//                     }, {
-//                         house_number: 45,
-//                         street: "Kents Hill Road",
-//                         postcode: "SS7 5PJ"
-//                     }, {
-//                         house_number: 30,
-//                         street: "Melbourne Street",
-//                         postcode: "PO30 1SP"
-//                     }]
-//                 }
-//             }, {
-//                 "-name": "Valerie Sayce",
-//                 "-age": 45,
-//                 addresses: {
-//                     address: [{
-//                         house_number: 34,
-//                         street: "Albert Road",
-//                         postcode: "PL3 2JQ"
-//                     }, {
-//                         house_number: 113,
-//                         street: "Winston Street",
-//                         postcode: "SX3 9JB"
-//                     }]
-//                 }
-//             }]
-//         }
-//     }
-//
-// **Output:**
-//
-//     <?xml version="1.0" encoding="UTF-8" ?>
-//     <customers>
-//       <customer name="David Pettifer" age="32">
-//         <addresses>
-//           <address>
-//             <house_number>22</house_number> 
-//             <street>Brook Road</street>
-//             <postcode>PO37 7LU</postcode>
-//           </address>
-//           <address>
-//             <house_number>45</house_number>
-//             <street>Kents Hill Road</street>
-//             <postcode>SS7 5PJ</postcode>
-//           </address> 
-//           <address>
-//             <house_number>30</house_number>
-//            <street>Melbourne Street</street>
-//             <postcode>PO30 1SP</postcode>
-//           </address>
-//         </addresses>
-//       </customer>
-//       <customer name="Valerie Sayce" age="45">
-//         <addresses>
-//           <address>
-//             <house_number>34</house_number>
-//             <street>Albert Road</street>
-//             <postcode>PL3 2JQ</postcode>
-//           </address>
-//           <address>
-//             <house_number>113</house_number>
-//             <street>Winston Street</street>
-//             <postcode>SX3 9JB</postcode>
-//           </address>
-//         </addresses>
-//       </customer>
-//     </customers>
-//
-// * `xmlDecl`: Constant used for the xml declaration
-// * `attr_prefix`: Constant used to prefix attributes
+
+/**
+ * Default Configuration
+ */
 var xmlDecl = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>",
-	attr_prefix = '-'
+	attr_prefix = '@'
+	cdata_prefix = '!';
 
 function writeXml(tree) {
 	var xml = hashToXml(null, tree);
@@ -115,7 +34,7 @@ function hashToXml(name, tree) {
 				elem[elem.length] = "<" + key + " />";
 			}
 
-			// Check to see if the proeprty value is an `Array`, if it is then we handle it with the
+			// Check to see if the property value is an `Array`, if it is then we handle it with the
 			// `arrayToXml()` method, passing it the property name which is used for the root element that will 
 			// contain this array object
 			else if (typeof(val) == "object" && val.constructor == Array) {
@@ -182,6 +101,9 @@ function scalarToXml(name, text) {
 	if (name == "#text") {
 		return escapeXml(text);
 	}
+	else if (name.charAt(0) == cdata_prefix) {
+		return "<" + name.substring(1) + "><![CDATA[" + text + "]]></" + name.substring(1) + ">";
+	} 
 	else {
 		return "<" + name + ">" + escapeXml(text) + "</" + name + ">";
 	}
