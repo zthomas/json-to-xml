@@ -6,9 +6,10 @@ var xmlDecl = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>",
 	attr_prefix = '@'
 	cdata_prefix = '!';
 
-function writeXml(tree) {
+function writeXml(tree, decl) {
 	var xml = hashToXml(null, tree);
-	return xmlDecl + xml;
+	if (typeof decl != 'undefined') return decl + xml; 
+	else return xmlDecl + xml;
 };
 
 // Takes a Javascript object and recursively iterates over its properties,
